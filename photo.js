@@ -12,7 +12,7 @@
         return new Promise(
             (resolve, reject) => {
                 const speechApiUrl = [
-                    'http://localhost:1337/age?',
+                    'https://faceage.herokuapp.com/age?',
                 ].join('&');
 
                 //console.log(stream);
