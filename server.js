@@ -5,7 +5,7 @@ var bind = require('bind');
 var faceService = require("./face-service.js");
 var needle = require("needle");
 var atob = require("atob");
-var Blob = require("Blob");
+
 //var fs = require()
 
 var http = require('http');
