@@ -1,0 +1,33 @@
+{
+  "name": "weather",
+  "version": "1.0.0",
+  "description": "weather api",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "author": "Tommaso Tosi",
+  "license": "public",
+  "keywords": [
+    "botbuilder",
+    "bots",
+    "chatbots",
+    "botbuilder-samples"
+  ],
+  "bugs": {
+    "url": "https://github.com/Microsoft/BotBuilder-Samples/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Microsoft/BotBuilder-Samples.git"
+  },
+  "dependencies": {
+   "httpdispatcher": "^2.0.1",
+   "http": "^0.0.0",
+   "bind": "^0.1.7",
+   "restify": "^4.3.0",
+   "request": "^2.79.0",
+   "needle": "^1.5.0",
+   "atob": "^2.0.3",
+   "Blob": "^0.10.0"
+  }
+}
