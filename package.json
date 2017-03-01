@@ -1,17 +1,14 @@
 {
-  "name": "weather",
+  "name": "face",
   "version": "1.0.0",
-  "description": "weather api",
+  "description": "face api",
   "scripts": {
     "start": "node server.js"
   },
   "author": "Tommaso Tosi",
   "license": "public",
   "keywords": [
-    "botbuilder",
-    "bots",
-    "chatbots",
-    "botbuilder-samples"
+    "face api"
   ],
   "bugs": {
     "url": "https://github.com/Microsoft/BotBuilder-Samples/issues"

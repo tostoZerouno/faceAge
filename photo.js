@@ -12,6 +12,7 @@
         return new Promise(
             (resolve, reject) => {
                 const speechApiUrl = [
+                    //'http://localhost:4430/age?',
                     'https://faceage.herokuapp.com/age?',
                 ].join('&');
 
@@ -21,7 +22,7 @@
 
                 var xhr = new XMLHttpRequest();
                 xhr.open('POST', speechApiUrl, true);
-                xhr.setRequestHeader('content-type', 'image/png');
+                xhr.setRequestHeader('content-type', 'text/plain');
                 //xhr.setRequestHeader('Ocp-Apim-Subscription-Key', FACE_API_KEY);
 
                 xhr.onreadystatechange = function () {//Call a function when the state changes.

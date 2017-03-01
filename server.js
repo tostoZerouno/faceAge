@@ -1,23 +1,16 @@
 //var dispatcher = require('httpdispatcher'); 
-//var HttpDispatcher = require('httpdispatcher');
-//var dispatcher = new HttpDispatcher();
+var HttpDispatcher = require('httpdispatcher');
+var dispatcher = new HttpDispatcher();
 var bind = require('bind');
 var faceService = require("./face-service.js");
 var needle = require("needle");
 var atob = require("atob");
-var restify = require('restify');
+var Blob = require("Blob");
 //var fs = require()
 
-//var http = require('http');
+var http = require('http');
 
-
-
-var server = restify.createServer();
-server.listen( 443, function () {
-    console.log('%s listening to %s', server.name, server.url);
-});
-
-server.get('/home', function (req, res, chain) {
+dispatcher.onGet('/home', function (req, res, chain) {
     bind.toFile('tpl/home.tpl', {
         name: 'Alberto',
         address: 'via Roma',
@@ -28,7 +21,7 @@ server.get('/home', function (req, res, chain) {
     });
 });
 
-server.get('/photo', function (req, res, chain) {
+dispatcher.onGet('/photo', function (req, res, chain) {
     bind.toFile('tpl/photo.tpl', {
         age: '1000',
         file: './photo.js',
@@ -40,7 +33,7 @@ server.get('/photo', function (req, res, chain) {
     });
 });
 
-server.post('/age', function (req, res) {
+dispatcher.onPost('/age', function (req, res) {
     console.log("POST");
     res.writeHead(200, { 'Content-Type': 'application/json' });
     var getage = 0;
@@ -63,6 +56,9 @@ server.post('/age', function (req, res) {
 
 });
 
+http.createServer(function (req, res) {
+    dispatcher.dispatch(req, res);
+}).listen(443);
 
 function blobbizza(dataURI) {
     var byteString;
