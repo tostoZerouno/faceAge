@@ -1,16 +1,19 @@
 //var dispatcher = require('httpdispatcher'); 
-var HttpDispatcher = require('httpdispatcher');
-var dispatcher = new HttpDispatcher();
+//var HttpDispatcher = require('httpdispatcher');
+//var dispatcher = new HttpDispatcher();
 var bind = require('bind');
 var faceService = require("./face-service.js");
 var needle = require("needle");
 var atob = require("atob");
+var http = require('http');
+var express = require('express');
 
 //var fs = require()
 
-var http = require('http');
+var app = express();
+app.set('port', 443);
 
-dispatcher.onGet('/home', function (req, res, chain) {
+app.get('/home', function (req, res, chain) {
     bind.toFile('tpl/home.tpl', {
         name: 'Alberto',
         address: 'via Roma',
@@ -20,8 +23,7 @@ dispatcher.onGet('/home', function (req, res, chain) {
         res.end(data);
     });
 });
-
-dispatcher.onGet('/photo', function (req, res, chain) {
+app.get('/photo', function (req, res, chain) {
     bind.toFile('tpl/photo.tpl', {
         age: '1000',
         file: './photo.js',
@@ -33,7 +35,7 @@ dispatcher.onGet('/photo', function (req, res, chain) {
     });
 });
 
-dispatcher.onPost('/age', function (req, res) {
+app.post('/age', function (req, res) {
     console.log("POST");
     res.writeHead(200, { 'Content-Type': 'application/json' });
     var getage = 0;
@@ -56,9 +58,10 @@ dispatcher.onPost('/age', function (req, res) {
 
 });
 
-http.createServer(function (req, res) {
-    dispatcher.dispatch(req, res);
-}).listen(443,"https://faceage.herokuapp.com");
+var server  = http.createServer(app);
+server.listen(app.get('port'), function(err) {
+        console.log(err, server.address());
+});
 
 function blobbizza(dataURI) {
     var byteString;
