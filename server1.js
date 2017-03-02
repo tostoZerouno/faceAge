@@ -3,20 +3,30 @@
 //var dispatcher = new HttpDispatcher();
 var bind = require('bind');
 var faceService = require("./face-service.js");
-//var needle = require("needle");
+var needle = require("needle");
 var atob = require("atob");
-//var http = require('http');
-var restify = require("restify");
+var http = require('http');
+var express = require('express');
+var bodyParser = require("body-parser");
+var multer  = require('multer')
+var upload = multer({ dest: 'uploads/' })
+var multiparty = require("multiparty");
 
 //var fs = require()
-var server  = restify.createServer({accept: ["image/png"]});
-server.use(restify.bodyParser());
-server.listen(process.env.port || process.env.PORT || 443, function () {
-    console.log('%s listening to %s', server.name, server.url);
-});
 
+var app = express();
+app.set('port', 4430);
+//app.use(bodyParser.raw());
+//app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+var router = express.Router();
+app.use('/',router);
+/*app.use(function (req, res, next) {
+  console.log(req.files); // JSON Object
+  next();
+});*/
 
-server.get('/home', function (req, res, chain) {
+router.get('/home', function (req, res, chain) {
     bind.toFile('tpl/home.tpl', {
         name: 'Alberto',
         address: 'via Roma',
@@ -26,8 +36,7 @@ server.get('/home', function (req, res, chain) {
         res.end(data);
     });
 });
-
-server.get('/photo', function (req, res, chain) {
+router.get('/photo', function (req, res, chain) {
     bind.toFile('tpl/photo.tpl', {
         age: '1000',
         file: './photo.js',
@@ -39,12 +48,21 @@ server.get('/photo', function (req, res, chain) {
     });
 });
 
-server.post('/age', function (req, res) {
+router.post('/age',upload.any(), function (req, res) {
+    var form = new multiparty.Form();
+    
+    form.parse(req, function(err, fields, files){
+        console.log(fields);
+    });
+    var sizeof = require('object-sizeof');
+    console.log(sizeof(req.body));
+    console.log(req.body.file);
+    console.log(req.file);
     console.log("POST");
     res.writeHead(200, { 'Content-Type': 'application/json' });
     var getage = 0;
 
-    faceService.getAgeFromImage(req.body)
+    faceService.getAgeFromImage(blobbizza(req.body))
         .then(age => {
             getage = age;
             var response = JSON.stringify({
@@ -62,9 +80,10 @@ server.post('/age', function (req, res) {
 
 });
 
-/*http.createServer(function (req, res) {
-    dispatcher.dispatch(req, res);
-}).listen(443,"faceage.herokuapp.com");*/
+var server  = http.createServer(app);
+server.listen(app.get('port'), function(err) {
+        console.log(err, server.address());
+});
 
 function blobbizza(dataURI) {
     var byteString;

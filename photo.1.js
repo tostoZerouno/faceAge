@@ -12,16 +12,23 @@
         return new Promise(
             (resolve, reject) => {
                 const speechApiUrl = [
-                    //'http://localhost:4430/age?',
-                    'https://faceage.herokuapp.com/age?',
+                    'http://localhost:4430/age?',
+                    //'https://faceage.herokuapp.com/age?',
                 ].join('&');
 
-                //var formData = new FormData();
-                //formData.append("file", dataURItoBlob(stream));
+                //console.log(stream);
+                //var byteArray=atob(unescape(stream.split(',')[1]));
+                //Uint8Array.from(atob(unescape(stream.split(',')[1])), byteArray => byteArray.charCodeAt(0))
 
                 var xhr = new XMLHttpRequest();
                 xhr.open('POST', speechApiUrl, true);
-                xhr.setRequestHeader('content-type', 'image/png');
+                xhr.setRequestHeader('content-type', 'multipart/form-data');
+
+                var formData = new FormData();
+                var blob = dataUriToBlob(stream);
+                formData.append("file", blob);
+                
+
                 //xhr.setRequestHeader('Ocp-Apim-Subscription-Key', FACE_API_KEY);
 
                 xhr.onreadystatechange = function () {//Call a function when the state changes.
@@ -31,7 +38,7 @@
                         resolve(xhr.status);
                     }
                 }
-                xhr.send(dataURItoBlob(stream));
+                xhr.send(formData);
                 // resolve(32);
             });
 
@@ -94,14 +101,31 @@
         console.log("KO");
     }
 
-    function dataURItoBlob(dataURI) {
-        var byteString = atob(dataURI.split(',')[1]);
-        var ab = new ArrayBuffer(byteString.length);
-        var ia = new Uint8Array(ab);
-        for (var i = 0; i < byteString.length; i++) {
-            ia[i] = byteString.charCodeAt(i);
+
+
+    function dataUriToBlob(dataURI) {
+        // serialize the base64/URLEncoded data
+        var byteString;
+        if (dataURI.split(',')[0].indexOf('base64') >= 0) {
+            byteString = atob(dataURI.split(',')[1]);
         }
-        return new Blob([ab], { type: 'image/jpeg' });
+        else {
+            byteString = unescape(dataURI.split(',')[1]);
+        }
+
+        // parse the mime type
+        var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0]
+
+        // construct a Blob of the image data
+        var array = [];
+        for(var i = 0; i < byteString.length; i++) {
+            array.push(byteString.charCodeAt(i));
+        }
+        return new Blob(
+            [new Uint8Array(array)],
+            {type: mimeString}
+        );
     }
+
 
 })();
