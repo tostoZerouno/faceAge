@@ -53,6 +53,7 @@ server.post('/age', function (req, res) {
                 }
             });
 
+            console.log(getage);
             res.end(response);
         })
         .catch(error => {
