@@ -9,7 +9,7 @@ var atob = require("atob");
 var restify = require("restify");
 
 //var fs = require()
-var server  = restify.createServer({accept: ["image/png"]});
+var server = restify.createServer({ accept: ["image/png"] });
 server.use(restify.bodyParser());
 server.listen(process.env.port || process.env.PORT || 443, function () {
     console.log('%s listening to %s', server.name, server.url);
@@ -34,7 +34,10 @@ server.get('/photo', function (req, res, chain) {
         //file2: './face-service.js'
         //city: 'Milano'
     }, function (data) {
-        res.writeHead(200, { 'Content-Type': 'text/html' });
+        res.writeHead(200, {
+            'Content-Type': 'text/html',
+            'Access-Control-Allow-Origin': '*'
+        });
         res.end(data);
     });
 });
